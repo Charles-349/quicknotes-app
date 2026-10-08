@@ -4,13 +4,43 @@ const noteCategory = document.querySelector("#note-category");
 const errorMessage = document.querySelector("#error-message");
 const notesList = document.querySelector("#notes-list");
 const noteCount = document.querySelector("#note-count");
+const searchInput = document.querySelector("#search-input");
+const storageKey = "quicknotes-notes";
 
-let notes = [];
+function loadNotes() {
+  try {
+    const savedNotes = JSON.parse(localStorage.getItem(storageKey) ?? "[]");
+    if (!Array.isArray(savedNotes)) {
+      return [];
+    }
+
+    return savedNotes.filter((note) =>
+      note &&
+      typeof note.id === "string" &&
+      typeof note.text === "string" &&
+      typeof note.category === "string" &&
+      typeof note.createdAt === "string"
+    );
+  } catch {
+    return [];
+  }
+}
+
+function saveNotes() {
+  localStorage.setItem(storageKey, JSON.stringify(notes));
+}
+
+let notes = loadNotes();
 
 function render() {
   notesList.replaceChildren();
+  const searchWords = searchInput.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const visibleNotes = notes.filter((note) => {
+    const noteText = note.text.toLowerCase();
+    return searchWords.every((word) => noteText.includes(word));
+  });
 
-  notes.forEach((note) => {
+  visibleNotes.forEach((note) => {
     const card = document.createElement("li");
     card.classList.add(`category-${note.category.toLowerCase()}`);
 
@@ -38,6 +68,7 @@ function render() {
     deleteButton.textContent = "Delete";
     deleteButton.addEventListener("click", () => {
       notes = notes.filter((savedNote) => savedNote.id !== note.id);
+      saveNotes();
       render();
     });
 
@@ -46,6 +77,14 @@ function render() {
     card.append(content, deleteButton);
     notesList.appendChild(card);
   });
+
+  if (searchWords.length > 0 && visibleNotes.length === 0) {
+    const emptyMessage = document.createElement("li");
+    emptyMessage.className = "empty-search-message";
+    emptyMessage.setAttribute("role", "status");
+    emptyMessage.textContent = "No notes match your search.";
+    notesList.appendChild(emptyMessage);
+  }
 
   if (notes.length === 0) {
     noteCount.textContent = "You have no notes yet.";
@@ -79,9 +118,12 @@ noteForm.addEventListener("submit", (event) => {
     createdAt: new Date().toLocaleString(),
   });
 
+  saveNotes();
   noteInput.value = "";
   errorMessage.textContent = "";
   render();
 });
+
+searchInput.addEventListener("input", render);
 
 render();
