@@ -48,11 +48,11 @@ function render() {
   });
 
   if (notes.length === 0) {
-    noteCount.textContent = "No notes yet.";
+    noteCount.textContent = "You have no notes yet.";
   } else if (notes.length === 1) {
-    noteCount.textContent = "1 note";
+    noteCount.textContent = "You have 1 note.";
   } else {
-    noteCount.textContent = `${notes.length} notes`;
+    noteCount.textContent = `You have ${notes.length} notes.`;
   }
 }
 
@@ -61,7 +61,7 @@ noteForm.addEventListener("submit", (event) => {
   const text = noteInput.value.trim();
 
   if (!text) {
-    errorMessage.textContent = "Please enter a note.";
+    errorMessage.textContent = "Please type a note first.";
     noteInput.focus();
     return;
   }
