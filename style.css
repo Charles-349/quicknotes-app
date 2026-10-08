@@ -145,12 +145,72 @@ button:focus-visible {
 }
 
 #notes-list > li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   margin: 0;
   padding: 1rem;
   border: 1px solid var(--border);
   border-left: 5px solid #aebbb4;
   border-radius: 6px;
   background: #fff;
+}
+
+.note-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.note-text {
+  margin: 0 0 0.6rem;
+  overflow-wrap: anywhere;
+}
+
+.note-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.note-category {
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.note-category.category-personal {
+  background: #e2f2ee;
+  color: #0f665c;
+}
+
+.note-category.category-work {
+  background: #f7e8e9;
+  color: #922f3b;
+}
+
+.note-category.category-study {
+  background: #e7eff8;
+  color: #2868a8;
+}
+
+.note-date {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.delete-note {
+  flex: 0 0 auto;
+  border-color: #d7a4a8;
+  background: #fff;
+  color: #922f3b;
+}
+
+.delete-note:hover {
+  border-color: #922f3b;
+  background: #fae8e9;
 }
 
 #notes-list > .category-personal {
